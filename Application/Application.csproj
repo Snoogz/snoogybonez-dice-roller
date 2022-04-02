@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Features\RollHistory\Commands\DeleteRollHistory" />
       <Folder Include="Features\RollHistory\Queries\GetRollHistoryList" />
     </ItemGroup>
 
