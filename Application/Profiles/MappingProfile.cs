@@ -1,4 +1,5 @@
 ﻿using Application.Features.RollHistory.Commands.CreateRolHistory;
+using Application.Features.RollHistory.Queries.GetRollHistoryList;
 using AutoMapper;
 using Domain.Entities;
 
@@ -12,5 +13,8 @@ public class MappingProfile : Profile
             .ForMember(rh => rh.DiceValues,
                 opt => opt.MapFrom(crhc => crhc.DiceValuePips.Select(dvp => new DiceValue { Pip = dvp }).ToList()))
             .ReverseMap();
+
+        CreateMap<RollHistoryDto, RollHistory>().ReverseMap();
+        CreateMap<DiceValuesDto, DiceValue>().ReverseMap();
     }
 }
