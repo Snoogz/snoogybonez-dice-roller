@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Domain.Entities;
 using NUnit.Framework;
 using Persistence.Tests.Common;
@@ -17,7 +18,7 @@ public class RollerDbContextTests
     }
 
     [Test]
-    public void RollerDbContextTests_SaveAll()
+    public void Should_Save_New_RollHistory()
     {
         var rh = new RollHistory
         {
@@ -53,5 +54,45 @@ public class RollerDbContextTests
             Assert.IsTrue(dv.Pip is 1 or 3);
             Assert.IsTrue(rh.RollHistoryId == dv.RollHistoryId);
         }
+    }
+
+    [Test]
+    public void Should_Return_All_RollHistory()
+    {
+        using var rollerDbContext = _context?.CreateContext();
+        var rollHistory = rollerDbContext?.RollHistories.ToList();
+        
+        Assert.IsNotNull(rollHistory);
+    }
+
+    [Test]
+    public void Should_Delete_RollHistory()
+    {
+        using var rollerDbContext = _context?.CreateContext();
+
+        var rollHistory = rollerDbContext?.RollHistories.First();
+        Assert.IsNotNull(rollHistory);
+        
+        if (rollHistory != null) rollerDbContext?.RollHistories.Remove(rollHistory);
+        rollerDbContext?.SaveChanges();
+        
+        Assert.IsFalse(rollerDbContext?.RollHistories.Any());
+    }
+
+    [Test]
+    public void Should_Update_RollHistory()
+    {
+        using var rollerDbContext = _context?.CreateContext();
+
+        var rollHistory = rollerDbContext?.RollHistories.First();
+        
+        Assert.IsNotNull(rollHistory);
+        Assert.AreEqual("2d10", rollHistory?.DiceNotation);
+
+        if (rollHistory != null) rollHistory.DiceNotation = "2d20";
+        rollerDbContext?.SaveChanges();
+        
+        var afterUpdate = rollerDbContext?.RollHistories.First();
+        Assert.AreEqual("2d20", afterUpdate?.DiceNotation);
     }
 }
